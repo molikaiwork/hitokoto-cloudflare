@@ -69,15 +69,11 @@ export async function onRequest(context) {
 
     let sentences = [];
 
-    // 如果有 categoryKey 则尝试获取对应分类的一言
+    // 如果有 categoryKey 并且该类别存在，则使用对应类别的一言
     if (categoryKey) {
-        // 获取该分类的一言数据
-        sentences = sentencesMap[categoryKey] || [];
-        if (sentences.length === 0) {
-            return createResponse(404, '未找到此类别的一言');
-        }
+        sentences = sentencesMap[categoryKey] || sentencesMap['a']; // 如果没有该类别，默认使用 'a' 类别
     } else {
-        // 如果没有 categoryKey 则随机选择一个分类
+        // 如果没有提供 categoryKey，则随机选择一个类别
         const keys = Object.keys(sentencesMap);
         const randomKey = keys[Math.floor(Math.random() * keys.length)];
         sentences = sentencesMap[randomKey];
