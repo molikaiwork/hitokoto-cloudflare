@@ -1,4 +1,4 @@
-// 逐个导入 sentences 目录下的各个JSON文件
+// 逐个导入 sentences 目录下的各个 JSON 文件
 import a from '../sentences/a.json';
 import b from '../sentences/b.json';
 import c from '../sentences/c.json';
@@ -108,66 +108,60 @@ export async function onRequest(context) {
             length: randomSentence.length // 一言的长度
         };
 
-        // 如果有 encode 参数则判断并返回相应的格式
+        // 如果有 encodeType、callback、select 参数则处理并返回相应的内容
         if (encodeType === 'text') {
-            // 如果有 callback 参数则设置调用的异步函数
-            if (callback) {
-                const textCallbackContent = `;${callback}("${randomSentence.hitokoto.replace(/"/g, '\\"')}");`;
-                return new Response(textCallbackContent, {
-                    headers: {
-                        'Content-Type': 'application/javascript; charset=UTF-8',
-                        corsHeaders
-                    }
-                });
-            }
+            // 构建基本的响应内容
+            const responseContent = callback 
+                ? `;${callback}("${randomSentence.hitokoto.replace(/"/g, '\\"')}");` 
+                : randomSentence.hitokoto;
 
-            // 返回纯文本
-            return new Response(randomSentence.hitokoto, {
+            // 返回响应
+            const contentType = callback ? 'application/javascript' : 'text/plain';
+            return new Response(responseContent, {
                 headers: {
-                    'Content-Type': 'text/plain; charset=UTF-8',
-                    corsHeaders
+                    'Content-Type': `${contentType}; charset=UTF-8`,
+                    ...corsHeaders
                 }
             });
         } else if (encodeType === 'js') {
-            // 如果有 callback 参数则设置调用的异步函数
-            if (callback) {
-                const jsCallbackContent = `;${callback}("(function hitokoto(){var hitokoto=\"${randomSentence.hitokoto.replace(/"/g, '\\"')}\";var dom=document.querySelector('${select || '.hitokoto'}');Array.isArray(dom)?dom[0].innerText=hitokoto:dom.innerText=hitokoto;})()");`;
-                return new Response(jsCallbackContent, {
-                    headers: {
-                        'Content-Type': 'application/javascript; charset=UTF-8',
-                        corsHeaders
-                    }
-                });
-            }
-
-            // 返回 JS 脚本内容
+            // 构建基础的 JS 内容
             const jsContent = `(function hitokoto(){var hitokoto="${randomSentence.hitokoto.replace(/"/g, '\\"')}";var dom=document.querySelector('${select || '.hitokoto'}');Array.isArray(dom)?dom[0].innerText=hitokoto:dom.innerText=hitokoto;})()`;
-            return new Response(jsContent, {
+
+            // 如果有 callback 参数，则包裹为回调形式
+            const finalContent = callback 
+                ? `;${callback}("${jsContent}");` 
+                : jsContent;
+
+            // 返回最终的 JS 内容
+            return new Response(finalContent, {
                 headers: {
                     'Content-Type': 'application/javascript; charset=UTF-8',
-                    corsHeaders
+                    ...corsHeaders
                 }
             });
         } else if (encodeType === 'json' && callback) {
             // 将 response 对象转换为 JSON 字符串
             const jsonResponse = JSON.stringify(response);
 
+            // 构建带调用异步函数的 JSON
             const jsonCallbackContent = `;${callback}("${jsonResponse.replace(/"/g, '\\"')}");`;
+
+            // 返回响应
             return new Response(jsonCallbackContent, {
                 headers: {
                     'Content-Type': 'application/javascript; charset=UTF-8',
                     corsHeaders
                 }
             });
+        } else {
+            // 默认返回 JSON 格式数据
+            return Response.json(response, {
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    corsHeaders
+                }
+            });
         }
-
-        // 返回 JSON 格式数据
-        return Response.json(response, {
-            headers: {
-                'Content-Type': 'application/json; charset=UTF-8',
-                corsHeaders
-            }
-        });
     } catch (error) {
         console.error('Unexpected error:', error);
         return handleError(500, error, env.DEV_ENV);
