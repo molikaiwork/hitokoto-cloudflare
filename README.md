@@ -1,5 +1,5 @@
 # Hitokoto-Cloudflare
-使用 Cloudflare Pages 搭建的一言（Hitokoto）API。
+使用 Cloudflare Pages 搭建的简洁、快速的一言（Hitokoto）API。
 
 ## 使用方法
 1. 分叉此存储库。
