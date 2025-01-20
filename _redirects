@@ -1,1 +1,1 @@
-/sentences/*.json /api?c=:splat 301
+/sentences/*.json /?c=:splat 301

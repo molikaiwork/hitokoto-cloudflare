@@ -1,8 +1,6 @@
 /*
-    Cache-Control: public, max-age=60, stale-while-revalidate=30
-    Referrer-Policy: no-referrer
     X-Content-Type-Options: nosniff
-    X-Powered-By: molikai-work/hitokoto-cloudflare
+    X-Source-Code: https://github.com/molikai-work/hitokoto-cloudflare
 
 /LICENSE
     Content-Disposition: inline
