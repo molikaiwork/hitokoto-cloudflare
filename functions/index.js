@@ -81,7 +81,7 @@ export async function onRequest(context) {
 
         // 确保 maxLength 不小于 minLength
         if (maxLength < minLength) {
-            return createResponse(40, 'max_length 不能小于 min_length');
+            return createResponse(400, 'max_length 不能小于 min_length');
         }
 
         let sentences = [];
