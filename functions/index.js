@@ -76,12 +76,23 @@ export async function onRequest(context) {
         const encodeType = url.searchParams.get('encode'); // 从 URL 中获取 encode 参数，返回编码
         const callback = url.searchParams.get('callback'); // 从 URL 中获取 callback 参数，调用的异步函数
         const select = url.searchParams.get('select'); // 从 URL 中获取 select 参数，选择器。配合 encode=js 使用
-        const minLength = parseInt(url.searchParams.get('min_length'), 10) || 0; // 从 URL 中获取 min_length 参数，返回句子的最小长度（包含）
-        const maxLength = parseInt(url.searchParams.get('max_length'), 10) || 30; // 从 URL 中获取 max_length 参数，返回句子的最大长度（包含）
 
-        // 确保 minLength 和 max_length 是正整数
-        if ((minLength <= 0 || !Number.isInteger(minLength)) || (maxLength <= 0 || !Number.isInteger(maxLength))) {
-            return createResponse(400, 'min_length 和 max_length 必须是正整数');
+        const minLength = url.searchParams.has('min_length') // 从 URL 中获取 min_length 参数，返回句子的最小长度（包含）
+            ? parseInt(url.searchParams.get('min_length'), 10) 
+            : 0;
+
+        const maxLength = url.searchParams.has('max_length') // 从 URL 中获取 max_length 参数，返回句子的最大长度（包含）
+            ? parseInt(url.searchParams.get('max_length'), 10) 
+            : 30;
+
+        // 在 minLength 被传入时进行正整数检查
+        if (url.searchParams.has('min_length') && (minLength <= 0 || !Number.isInteger(minLength))) {
+            return createResponse(400, 'min_length 必须是正整数');
+        }
+
+        // 在 maxLength 被传入时进行正整数检查
+        if (url.searchParams.has('max_length') && (maxLength <= 0 || !Number.isInteger(maxLength))) {
+            return createResponse(400, 'max_length 必须是正整数');
         }
 
         // 确保 maxLength 不小于 minLength
