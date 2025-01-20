@@ -6,6 +6,10 @@
 2. 部署到 Cloudflare Pages，不需要设置框架、环境变量等。
 3. 部署成功后直接访问即可，使用方法请参考 [一言开发者中心](https://developer.hitokoto.cn/sentence/)。
 
+## 待完成
+- [ ] 支持指定返回字符集
+- [ ] 支持指定返回句子的长度筛选
+
 ## 声明
 本仓库存储的程序是一个语录 API，语录数据来源于仓库根目录中的 sentences 文件夹，该数据集基于 [hitokoto-osc/sentences-bundle](https://github.com/hitokoto-osc/sentences-bundle)。本仓库作者不对数据内容的准确性或完整性负责，也不为其提供任何形式的保证。
 
