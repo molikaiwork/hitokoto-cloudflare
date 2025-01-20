@@ -99,16 +99,6 @@ export async function onRequest(context) {
             return createResponse(400, 'max_length 不能小于 min_length');
         }
 
-        // 确保 minLength 和 max_length 是正整数
-        if ((minLength <= 0 || !Number.isInteger(minLength)) || (maxLength <= 0 || !Number.isInteger(maxLength))) {
-            return createResponse(400, 'min_length 和 max_length 必须是正整数');
-        }
-
-        // 确保 maxLength 不小于 minLength
-        if (maxLength < minLength) {
-            return createResponse(400, 'max_length 不能小于 min_length');
-        }
-
         let sentences = [];
 
         // 如果有 categoryKey 并且该类别存在，则使用对应类别的一言
