@@ -112,28 +112,27 @@ export async function onRequest(context) {
             sentences = sentencesMap[randomKey];
         }
 
-        // 如果没有 minLength 或 maxLength 参数，则不需要合并所有类别
+        // 如果有 minLength 或 maxLength 参数，进行长度筛选
         if (minLength || maxLength) {
-            // 先将所有类别的句子聚集到一个数组中，进行长度筛选
-            let allSentences = [];
-            Object.values(sentencesMap).forEach(categorySentences => {
-                allSentences = allSentences.concat(categorySentences);
-            });
+            // 如果有 categoryKey，则仅筛选该类别的句子
+            if (categoryKey) {
+                sentences = sentencesMap[categoryKey] || [];
+            } else {
+                // 如果没有 categoryKey，则聚合所有句子的集合
+                sentences = Object.values(sentencesMap).flat();
+            }
 
             // 过滤不符合 min_length 和 max_length 条件的句子
-            allSentences = allSentences.filter(sentence => {
+            sentences = sentences.filter(sentence => {
                 const isMinLengthValid = !minLength || sentence.length >= minLength;
                 const isMaxLengthValid = !maxLength || sentence.length <= maxLength;
                 return isMinLengthValid && isMaxLengthValid;
             });
 
             // 如果没有符合条件的句子，返回提示信息
-            if (allSentences.length === 0) {
+            if (sentences.length === 0) {
                 return createResponse(404, '没有找到符合长度条件的句子');
             }
-
-            // 从符合条件的所有句子中随机选择一条一言
-            sentences = allSentences;
         }
 
         // 从选中的分类中随机选择一条一言
