@@ -79,6 +79,16 @@ export async function onRequest(context) {
         const minLength = parseInt(url.searchParams.get('min_length'), 10) || 0; // 从 URL 中获取 min_length 参数，返回句子的最小长度（包含）
         const maxLength = parseInt(url.searchParams.get('max_length'), 10) || 30; // 从 URL 中获取 max_length 参数，返回句子的最大长度（包含）
 
+        // 确保 minLength 是正整数
+        if (minLength <= 0 || !Number.isInteger(minLength)) {
+            return createResponse(400, 'min_length 必须是一个正整数');
+        }
+
+        // 确保 minLength 是正整数
+        if (maxLength <= 0 || !Number.isInteger(maxLength)) {
+            return createResponse(400, 'max_length 必须是一个正整数');
+        }
+
         // 确保 maxLength 不小于 minLength
         if (maxLength < minLength) {
             return createResponse(400, 'max_length 不能小于 min_length');
