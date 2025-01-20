@@ -77,11 +77,11 @@ export async function onRequest(context) {
         const callback = url.searchParams.get('callback'); // 从 URL 中获取 callback 参数，调用的异步函数
         const select = url.searchParams.get('select'); // 从 URL 中获取 select 参数，选择器。配合 encode=js 使用
 
-        const minLength = url.searchParams.has('min_length') // 从 URL 中获取 min_length 参数，返回句子的最小长度（包含）
+        const minLength = url.searchParams.has('min_length') // 从 URL 中获取 min_length 参数，返回一言的最小长度（包含）
             ? parseInt(url.searchParams.get('min_length'), 10) 
             : 0;
 
-        const maxLength = url.searchParams.has('max_length') // 从 URL 中获取 max_length 参数，返回句子的最大长度（包含）
+        const maxLength = url.searchParams.has('max_length') // 从 URL 中获取 max_length 参数，返回一言的最大长度（包含）
             ? parseInt(url.searchParams.get('max_length'), 10) 
             : 30;
 
@@ -114,24 +114,27 @@ export async function onRequest(context) {
 
         // 如果有 minLength 或 maxLength 参数，进行长度筛选
         if (minLength || maxLength) {
-            // 如果有 categoryKey，则仅筛选该类别的句子
+            // 如果有 categoryKey，则仅筛选该类别的一言
             if (categoryKey) {
                 sentences = sentencesMap[categoryKey] || [];
             } else {
-                // 如果没有 categoryKey，则聚合所有句子的集合
+                // 如果没有 categoryKey，则聚合所有一言的集合
                 sentences = Object.values(sentencesMap).flat();
             }
 
-            // 过滤不符合 min_length 和 max_length 条件的句子
+            // 过滤不符合 min_length 和 max_length 条件的一言
             sentences = sentences.filter(sentence => {
                 const isMinLengthValid = !minLength || sentence.length >= minLength;
                 const isMaxLengthValid = !maxLength || sentence.length <= maxLength;
                 return isMinLengthValid && isMaxLengthValid;
             });
 
-            // 如果没有符合条件的句子，返回提示信息
+            // 如果没有符合条件的一言，返回提示信息
             if (sentences.length === 0) {
-                return createResponse(404, '没有找到符合长度条件的句子');
+                if (categoryKey) {
+                    return createResponse(404, '没有在该类别找到符合长度条件的一言');
+                }
+                return createResponse(404, '没有找到符合长度条件的一言');
             }
         }
 
