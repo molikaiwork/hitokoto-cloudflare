@@ -89,7 +89,19 @@ export async function onRequest(context) {
             sentences = sentencesMap[randomKey];
         }
 
-        // 从选中的分类中随机选择一条
+        // 过滤不符合 min_length 和 max_length 条件的句子
+        sentences = sentences.filter(sentence => {
+            const isMinLengthValid = !minLength || sentence.length >= minLength; // 如果 minLength 存在，则判断句子的长度是否大于等于 minLength
+            const isMaxLengthValid = !maxLength || sentence.length <= maxLength; // 如果 maxLength 存在，则判断句子的长度是否小于等于 maxLength
+            return isMinLengthValid && isMaxLengthValid;
+        });
+
+        // 如果没有符合条件的句子，返回提示信息
+        if (sentences.length === 0) {
+            return createResponse(404, '没有符合长度条件的句子');
+        }
+
+        // 从选中的分类中随机选择一条一言
         const randomSentence = sentences[Math.floor(Math.random() * sentences.length)];
 
         // 构造响应数据
