@@ -85,11 +85,12 @@ export async function onRequest(context) {
             ? parseInt(url.searchParams.get('max_length'), 10) 
             : 30;
 
-        // 只有在 minLength 或 maxLength 被传入时才进行检查
+        // 在 minLength 被传入时进行正整数检查
         if (url.searchParams.has('min_length') && (minLength <= 0 || !Number.isInteger(minLength))) {
             return createResponse(400, 'min_length 必须是正整数');
         }
 
+        // 在 maxLength 被传入时进行正整数检查
         if (url.searchParams.has('max_length') && (maxLength <= 0 || !Number.isInteger(maxLength))) {
             return createResponse(400, 'max_length 必须是正整数');
         }
