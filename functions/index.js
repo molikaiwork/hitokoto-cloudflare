@@ -109,7 +109,7 @@ export async function onRequest(context) {
         };
 
         // 如果有 encode 参数则判断并返回相应的格式
-        if (encodeType && encodeType === 'text') {
+        if (encodeType === 'text') {
             // 如果有 callback 参数则设置调用的异步函数
             if (callback) {
                 const textCallbackContent = `;${callback}("${randomSentence.hitokoto.replace(/"/g, '\\"')}");`;
@@ -128,7 +128,7 @@ export async function onRequest(context) {
                     corsHeaders
                 }
             });
-        } else if (encodeType && encodeType === 'js') {
+        } else if (encodeType === 'js') {
             // 如果有 callback 参数则设置调用的异步函数
             if (callback) {
                 const jsCallbackContent = `;${callback}("(function hitokoto(){var hitokoto=\"${randomSentence.hitokoto.replace(/"/g, '\\"')}\";var dom=document.querySelector('${select || '.hitokoto'}');Array.isArray(dom)?dom[0].innerText=hitokoto:dom.innerText=hitokoto;})()");`;
@@ -148,7 +148,7 @@ export async function onRequest(context) {
                     corsHeaders
                 }
             });
-        } else if (encodeType && encodeType === 'json' && callback) {
+        } else if (encodeType === 'json' && callback) {
             // 将 response 对象转换为 JSON 字符串
             const jsonResponse = JSON.stringify(response);
 
