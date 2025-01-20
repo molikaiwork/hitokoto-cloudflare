@@ -45,7 +45,7 @@ function createResponse(code, message, extraData = {}, extraHeaders = {}) {
     }, {
         headers: {
             ...extraHeaders,
-            corsHeaders,
+            ...corsHeaders,
         },
         status: code,
     });
@@ -67,7 +67,9 @@ export async function onRequest(context) {
         // 处理 OPTIONS 请求
         if (request.method === "OPTIONS") {
             return new Response(null, {
-                headers: corsHeaders,
+                headers: {
+                    ...corsHeaders,
+                },
             });
         }
 
@@ -199,7 +201,7 @@ export async function onRequest(context) {
             return new Response(jsonCallbackContent, {
                 headers: {
                     "Content-Type": "application/javascript; charset=UTF-8",
-                    corsHeaders,
+                    ...corsHeaders,
                 },
             });
         } else {
@@ -207,7 +209,7 @@ export async function onRequest(context) {
             return Response.json(response, {
                 headers: {
                     "Content-Type": "application/json; charset=UTF-8",
-                    corsHeaders,
+                    ...corsHeaders,
                 },
             });
         }
