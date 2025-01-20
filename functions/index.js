@@ -139,7 +139,7 @@ export async function onRequest(context) {
                     ...corsHeaders
                 }
             });
-        } else if (encodeType === 'json' && callback) {
+        } else if ((!encodeType || encodeType === 'json') && callback) {
             // 将 response 对象转换为 JSON 字符串
             const jsonResponse = JSON.stringify(response);
 
