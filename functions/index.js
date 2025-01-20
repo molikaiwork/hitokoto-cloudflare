@@ -28,6 +28,7 @@ const sentencesMap = {
     "l": l,
 };
 
+// 跨域请求允许标头
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, OPTIONS",
