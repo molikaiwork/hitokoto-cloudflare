@@ -76,6 +76,18 @@ export async function onRequest(context) {
         const encodeType = url.searchParams.get('encode'); // 从 URL 中获取 encode 参数，返回编码
         const callback = url.searchParams.get('callback'); // 从 URL 中获取 callback 参数，调用的异步函数
         const select = url.searchParams.get('select'); // 从 URL 中获取 select 参数，选择器。配合 encode=js 使用
+        const minLength = parseInt(url.searchParams.get('min_length'), 10); // 获取最小长度
+        const maxLength = parseInt(url.searchParams.get('max_length'), 10); // 获取最大长度
+
+        // 如果 minLength 为 NaN，则使用默认值
+        if (isNaN(minLength)) {
+            minLength = 0;
+        }
+
+        // 如果 maxLength 为 NaN，则使用默认值
+        if (isNaN(maxLength)) {
+            maxLength = Infinity;
+        }
 
         let sentences = [];
 
