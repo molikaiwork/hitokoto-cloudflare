@@ -76,24 +76,14 @@ export async function onRequest(context) {
         const encodeType = url.searchParams.get('encode'); // 从 URL 中获取 encode 参数，返回编码
         const callback = url.searchParams.get('callback'); // 从 URL 中获取 callback 参数，调用的异步函数
         const select = url.searchParams.get('select'); // 从 URL 中获取 select 参数，选择器。配合 encode=js 使用
-        const minLength = parseInt(url.searchParams.get('min_length'), 10); // 获取最小长度
-        const maxLength = parseInt(url.searchParams.get('max_length'), 10); // 获取最大长度
-
-        // 如果 minLength 为 NaN，则使用默认值
-        if (isNaN(minLength)) {
-            minLength = 0;
-        }
-
-        // 如果 maxLength 为 NaN，则使用默认值
-        if (isNaN(maxLength)) {
-            maxLength = Infinity;
-        }
+        const minLength = parseInt(url.searchParams.get('min_length'), 10) || 0; // 从 URL 中获取 min_length 参数，返回句子的最小长度（包含）
+        const maxLength = parseInt(url.searchParams.get('max_length'), 10) || Infinity; // 从 URL 中获取 max_length 参数，返回句子的最大长度（包含）
 
         let sentences = [];
 
         // 如果有 categoryKey 并且该类别存在，则使用对应类别的一言
         if (categoryKey) {
-            sentences = sentencesMap[categoryKey] || sentencesMap['a']; // 如果没有该类别，默认使用 'a' 类别
+            sentences = sentencesMap[categoryKey] || sentencesMap['a']; // 如果没有该类别，默认使用 a 类别
         } else {
             // 如果没有提供 categoryKey，则随机选择一个类别
             const keys = Object.keys(sentencesMap);
