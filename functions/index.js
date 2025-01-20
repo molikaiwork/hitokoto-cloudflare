@@ -28,12 +28,14 @@ const sentencesMap = {
     "l": l,
 };
 
-// 跨域请求允许标头
-const corsHeaders = {
+// 通用响应标头
+const responseHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Max-Age": "86400",
+    "X-Content-Type-Options": "nosniff",
+    "X-Source-Code": "https://github.com/molikai-work/hitokoto-cloudflare",
 };
 
 // 统一返回函数
@@ -46,7 +48,7 @@ function createResponse(code, message, extraData = {}, extraHeaders = {}) {
     }, {
         headers: {
             ...extraHeaders,
-            ...corsHeaders,
+            ...responseHeaders,
         },
         status: code,
     });
@@ -69,7 +71,7 @@ export async function onRequest(context) {
         if (request.method === "OPTIONS") {
             return new Response(null, {
                 headers: {
-                    ...corsHeaders,
+                    ...responseHeaders,
                 },
             });
         }
@@ -172,7 +174,7 @@ export async function onRequest(context) {
             return new Response(responseContent, {
                 headers: {
                     "Content-Type": `${contentType}; charset=UTF-8`,
-                    ...corsHeaders,
+                    ...responseHeaders,
                 },
             });
         } else if (encodeType === "js") {
@@ -188,7 +190,7 @@ export async function onRequest(context) {
             return new Response(finalContent, {
                 headers: {
                     "Content-Type": "application/javascript; charset=UTF-8",
-                    ...corsHeaders,
+                    ...responseHeaders,
                 },
             });
         } else if ((!encodeType || encodeType === "json") && callback) {
@@ -202,7 +204,7 @@ export async function onRequest(context) {
             return new Response(jsonCallbackContent, {
                 headers: {
                     "Content-Type": "application/javascript; charset=UTF-8",
-                    ...corsHeaders,
+                    ...responseHeaders,
                 },
             });
         } else {
@@ -210,7 +212,7 @@ export async function onRequest(context) {
             return Response.json(response, {
                 headers: {
                     "Content-Type": "application/json; charset=UTF-8",
-                    ...corsHeaders,
+                    ...responseHeaders,
                 },
             });
         }
