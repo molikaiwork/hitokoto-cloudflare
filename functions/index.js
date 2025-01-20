@@ -77,11 +77,11 @@ export async function onRequest(context) {
         const callback = url.searchParams.get('callback'); // 从 URL 中获取 callback 参数，调用的异步函数
         const select = url.searchParams.get('select'); // 从 URL 中获取 select 参数，选择器。配合 encode=js 使用
 
-        let minLength = url.searchParams.has('min_length') // 从 URL 中获取 min_length 参数，返回句子的最小长度（包含）
+        const minLength = url.searchParams.has('min_length') // 从 URL 中获取 min_length 参数，返回句子的最小长度（包含）
             ? parseInt(url.searchParams.get('min_length'), 10) 
             : 0;
 
-        let maxLength = url.searchParams.has('max_length') // 从 URL 中获取 max_length 参数，返回句子的最大长度（包含）
+        const maxLength = url.searchParams.has('max_length') // 从 URL 中获取 max_length 参数，返回句子的最大长度（包含）
             ? parseInt(url.searchParams.get('max_length'), 10) 
             : 30;
 
