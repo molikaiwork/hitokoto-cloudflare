@@ -1,4 +1,2 @@
 User-agent: *
-Disallow: /*?*
-Disallow: /sentences/
-Disallow: /api/
+Disallow: /
